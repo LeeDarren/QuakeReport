@@ -6,13 +6,17 @@ package com.example.android.quakereport;
 
 public class Earthquake {
 
-    String mPlace; //place of earthquake in text
-    double mMagnitude;
-    String mDate; //time/date in text
+    private String mPlace; //place of earthquake in text
+    private double mMagnitude;
+    private String mDate; //time/date in text
 
     public Earthquake(double magnitude, String place, String date){
         mMagnitude=magnitude;
         mPlace=place;
         mDate=date;
     }
+
+    public String getPlace(){ return mPlace;}
+    public double getMagnitude(){ return mMagnitude;}
+    public String getDate(){ return mDate;}
 }
