@@ -39,9 +39,25 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         TextView magnitudeText = (TextView) convertView.findViewById(R.id.magnitude);
         magnitudeText.setText(String.format(Locale.US, "%.1f", earthquake.getMagnitude()));
 
-        //Setup the place
-        TextView placeText = (TextView) convertView.findViewById(R.id.location);
-        placeText.setText(earthquake.getPlace());
+        //Setup the location data
+        String fullLocation = earthquake.getLocation();
+        TextView locationOffsetView = (TextView) convertView.findViewById(R.id.location_offset);
+        TextView primaryLocationView = (TextView) convertView.findViewById(R.id.primary_location);
+        String locationOffset;
+        String primaryLocation;
+        //See if it has an offset, by looking for "of"
+        if(fullLocation.contains("of")){
+            //Include everything from the start to the end of "of"
+            locationOffset = fullLocation.substring(0, fullLocation.indexOf("of")+2);
+            //Everything from after "of"
+            primaryLocation = fullLocation.substring(fullLocation.indexOf("of")+3);
+        }else{
+            locationOffset = getContext().getString(R.string.near_the); //just call it near the
+            primaryLocation = fullLocation; // and the location
+        }
+        //Set the text
+        locationOffsetView.setText(locationOffset);
+        primaryLocationView.setText(primaryLocation);
 
         //Setup the date
         TextView dateText = (TextView) convertView.findViewById(R.id.date);
