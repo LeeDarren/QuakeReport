@@ -61,11 +61,14 @@ public final class QueryUtils {
                 //Find the properties object
                 JSONObject properties = earthquake.getJSONObject("properties");
                 //Get the details within property object
+                //Basic magnitude as double
                 double magnitude = properties.getDouble("mag");
+                //Basic location as a text place
                 String place = properties.getString("place");
-                String date = "" + properties.getInt("time");
+                //Extract the date in UNIXtime
+                Long time = properties.getLong("time");
                 //use the details to create add an earthquake to our earthquake array
-                earthquakes.add(new Earthquake(magnitude, place, date));
+                earthquakes.add(new Earthquake(magnitude, place, time));
             }
 
         } catch (JSONException e) {

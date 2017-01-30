@@ -8,15 +8,23 @@ public class Earthquake {
 
     private String mPlace; //place of earthquake in text
     private double mMagnitude;
-    private String mDate; //time/date in text
+    private long mTimeInMilliseconds; //time/date in text
 
-    public Earthquake(double magnitude, String place, String date){
-        mMagnitude=magnitude;
-        mPlace=place;
-        mDate=date;
+    public Earthquake(double magnitude, String place, long TimeInMilliseconds) {
+        mMagnitude = magnitude;
+        mPlace = place;
+        mTimeInMilliseconds = TimeInMilliseconds;
     }
 
-    public String getPlace(){ return mPlace;}
-    public double getMagnitude(){ return mMagnitude;}
-    public String getDate(){ return mDate;}
+    public String getPlace() {
+        return mPlace;
+    }
+
+    public double getMagnitude() {
+        return mMagnitude;
+    }
+
+    public long getTimeInMilliseconds() {
+        return mTimeInMilliseconds;
+    }
 }
