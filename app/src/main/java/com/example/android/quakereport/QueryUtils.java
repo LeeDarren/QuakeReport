@@ -78,8 +78,10 @@ public final class QueryUtils {
                 String place = properties.getString("place");
                 //Extract the date in UNIXtime
                 Long time = properties.getLong("time");
+                //Extract the url
+                String url = properties.getString("url");
                 //use the details to create add an earthquake to our earthquake array
-                earthquakes.add(new Earthquake(magnitude, place, time));
+                earthquakes.add(new Earthquake(magnitude, place, time, url));
             }
 
         } catch (JSONException e) {
