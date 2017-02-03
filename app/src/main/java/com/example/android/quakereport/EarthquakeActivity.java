@@ -20,6 +20,8 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,6 +30,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -44,6 +47,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
     EarthquakeAdapter mAdapter;
     TextView mEmptyTextView;
+    ProgressBar mLoadingSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +56,9 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
         // Find a reference to the {@link ListView} in the layout
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
-        // Set empty text view
         mEmptyTextView = (TextView) findViewById(R.id.empty_text_view);
+        mLoadingSpinner = (ProgressBar) findViewById(R.id.loading_spinner);
+        // Set empty text view
         earthquakeListView.setEmptyView(mEmptyTextView);
         //Set the adapter now
         mAdapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
@@ -68,9 +73,20 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
                 startActivity(websiteIntent);
             }
         });
-        // Get the earthquake data from http request
-//        new EarthquakeAsyncTask().execute(USGS_REQUEST_URL);
-        getLoaderManager().initLoader(0,null,this);
+        //Check for internet connectivity
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        // Get the earthquake data from http request only if connected
+        if(isConnected) {
+            getLoaderManager().initLoader(0, null, this);
+        } else{
+            mLoadingSpinner.setVisibility(View.GONE);
+            mEmptyTextView.setText(R.string.no_internet);
+        }
 
     }
 
@@ -91,7 +107,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         // Now if there's no data, then set empty text
         mEmptyTextView.setText(R.string.no_earthquakes);
         // Hide the loading spinner
-        findViewById(R.id.loading_spinner).setVisibility(View.GONE);
+        mLoadingSpinner.setVisibility(View.GONE);
     }
     @Override
     public void onLoaderReset(Loader<List<Earthquake>> loader) {
