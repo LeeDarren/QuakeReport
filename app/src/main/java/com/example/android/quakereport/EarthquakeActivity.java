@@ -28,12 +28,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>>{
 
@@ -41,6 +43,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     private static final String USGS_REQUEST_URL = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
 
     EarthquakeAdapter mAdapter;
+    TextView mEmptyTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,9 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
         // Find a reference to the {@link ListView} in the layout
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
+        // Set empty text view
+        mEmptyTextView = (TextView) findViewById(R.id.empty_text_view);
+        earthquakeListView.setEmptyView(mEmptyTextView);
         //Set the adapter now
         mAdapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
         earthquakeListView.setAdapter(mAdapter);
@@ -82,6 +88,10 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         if (data != null && !data.isEmpty()) {
             mAdapter.addAll(data);
         }
+        // Now if there's no data, then set empty text
+        mEmptyTextView.setText(R.string.no_earthquakes);
+        // Hide the loading spinner
+        findViewById(R.id.loading_spinner).setVisibility(View.GONE);
     }
     @Override
     public void onLoaderReset(Loader<List<Earthquake>> loader) {
